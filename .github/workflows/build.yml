@@ -17,8 +17,6 @@ jobs:
           kernel-branch: NETHUNTER
           config: vendor/kona-perf_defconfig
           arch: arm64
-          aosp-clang: true
-          android-version: 12
-          aosp-clang-version: r383902
-          aosp-gcc: true
+          other-clang-url: https://github.com/kdrag0n/proton-clang
+          other-clang-branch: master
           anykernel3: true
