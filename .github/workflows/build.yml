@@ -1,0 +1,22 @@
+name: Build NetHunter Kernel
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-kernel:
+    name: Build Kernel
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Build Kernel Binary
+        uses: dabao1955/kernel_build_action@main
+        with:
+          kernel-url: https://github.com/${{ github.repository }}
+          kernel-branch: NETHUNTER
+          config: vendor/kona-perf_defconfig
+          arch: arm64
+          aosp-clang: true
+          aosp-gcc: true
+          anykernel3: true
