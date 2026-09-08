@@ -2,21 +2,40 @@ name: Build NetHunter Kernel
 on:
   workflow_dispatch:
 
-permissions:
-  contents: write
-
 jobs:
-  build-kernel:
-    name: Build Kernel
+  build:
+    name: Compile Kernel
     runs-on: ubuntu-22.04
     steps:
-      - name: Build Kernel Binary
-        uses: dabao1955/kernel_build_action@main
+      - name: Checkout Kernel Source
+        uses: actions/checkout@v4
+
+      - name: Install Build Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y bc bison build-essential flex libssl-dev libelf-dev git zip lld
+
+      - name: Clone Proton Clang
+        run: |
+          git clone --depth=1 https://github.com/kdrag0n/proton-clang.git $HOME/proton-clang
+
+      - name: Compile Kernel Image
+        run: |
+          export PATH="$HOME/proton-clang/bin:$PATH"
+          export ARCH=arm64
+          export SUBARCH=arm64
+          make O=out CC=clang vendor/kona-perf_defconfig
+          make -j$(nproc --all) O=out CC=clang CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-gnueabi-
+
+      - name: Package with AnyKernel3
+        run: |
+          git clone https://github.com/osm0sis/AnyKernel3.git AK3
+          cp out/arch/arm64/boot/Image AK3/
+          cd AK3
+          zip -r9 ../AnyKernel3-ViP3R-kebab.zip * -x .git README.md
+
+      - name: Upload Flashable Zip
+        uses: actions/upload-artifact@v4
         with:
-          kernel-url: https://github.com/${{ github.repository }}
-          kernel-branch: NETHUNTER
-          config: vendor/kona-perf_defconfig
-          arch: arm64
-          other-clang-url: https://github.com/kdrag0n/proton-clang
-          other-clang-branch: master
-          anykernel3: true
+          name: AnyKernel3-ViP3R-kebab
+          path: AnyKernel3-ViP3R-kebab.zip
