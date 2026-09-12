@@ -19,6 +19,11 @@ jobs:
           sed -i '/rtl88x2/d' drivers/staging/Kconfig drivers/staging/Makefile || true
           sed -i '/rtl8821/d' drivers/staging/Kconfig drivers/staging/Makefile || true
 
+      - name: Inject RTL8812AU Driver
+        run: |
+          rm -rf drivers/staging/rtl8812au
+          git clone --depth=1 https://github.com/ViP3R-KERNELs/rtl8812au.git drivers/staging/rtl8812au
+
       - name: Install Build Dependencies
         run: |
           sudo apt-get update
