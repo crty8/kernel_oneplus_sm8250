@@ -11,6 +11,12 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 1
+          submodules: 'recursive'
+
+      - name: Remove Broken Driver References
+        run: |
+          sed -i '/rtl8192eu/d' drivers/staging/Kconfig || true
+          sed -i '/rtl8192eu/d' drivers/staging/Makefile || true
 
       - name: Install Build Dependencies
         run: |
