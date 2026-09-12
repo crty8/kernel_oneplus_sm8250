@@ -9,11 +9,13 @@ jobs:
     steps:
       - name: Checkout Kernel Source
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
 
       - name: Install Build Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y bc bison build-essential flex libssl-dev libelf-dev git zip lld
+          sudo apt-get install -y bc bison build-essential flex libssl-dev libelf-dev git zip lld gcc-aarch64-linux-gnu gcc-arm-linux-gnueabi
 
       - name: Clone Proton Clang
         run: |
@@ -24,12 +26,12 @@ jobs:
           export PATH="$HOME/proton-clang/bin:$PATH"
           export ARCH=arm64
           export SUBARCH=arm64
-          make O=out CC=clang vendor/kona-perf_defconfig
-          make -j$(nproc --all) O=out CC=clang CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-gnueabi-
+          make O=out ARCH=arm64 CC=clang CLANG_TRIPLE=aarch64-linux-gnu- CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-gnueabi- vendor/kona-perf_defconfig
+          make -j$(nproc --all) O=out ARCH=arm64 CC=clang CLANG_TRIPLE=aarch64-linux-gnu- CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-gnueabi-
 
       - name: Package with AnyKernel3
         run: |
-          git clone https://github.com/osm0sis/AnyKernel3.git AK3
+          git clone --depth=1 https://github.com/osm0sis/AnyKernel3.git AK3
           cp out/arch/arm64/boot/Image AK3/
           cd AK3
           zip -r9 ../AnyKernel3-ViP3R-kebab.zip * -x .git README.md
