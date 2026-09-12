@@ -12,12 +12,12 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: Remove Broken Driver References
+      - name: Remove Missing Kali Drivers
         run: |
-          sed -i '/rtl8192eu/d' drivers/staging/Kconfig || true
-          sed -i '/rtl8192eu/d' drivers/staging/Makefile || true
-          sed -i '/rtl8188eu/d' drivers/staging/Kconfig || true
-          sed -i '/rtl8188eu/d' drivers/staging/Makefile || true
+          sed -i '/rtl8192/d' drivers/staging/Kconfig drivers/staging/Makefile || true
+          sed -i '/rtl8188/d' drivers/staging/Kconfig drivers/staging/Makefile || true
+          sed -i '/rtl88x2/d' drivers/staging/Kconfig drivers/staging/Makefile || true
+          sed -i '/rtl8821/d' drivers/staging/Kconfig drivers/staging/Makefile || true
 
       - name: Install Build Dependencies
         run: |
