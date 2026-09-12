@@ -14,10 +14,13 @@ jobs:
 
       - name: Remove Missing Kali Drivers
         run: |
-          sed -i '/rtl8192/d' drivers/staging/Kconfig drivers/staging/Makefile || true
-          sed -i '/rtl8188/d' drivers/staging/Kconfig drivers/staging/Makefile || true
-          sed -i '/rtl88x2/d' drivers/staging/Kconfig drivers/staging/Makefile || true
-          sed -i '/rtl8821/d' drivers/staging/Kconfig drivers/staging/Makefile || true
+          sed -i '/rtl8814/Id' drivers/staging/Kconfig drivers/staging/Makefile || true
+          sed -i '/rtl8821/Id' drivers/staging/Kconfig drivers/staging/Makefile || true
+          sed -i '/rtl8192/Id' drivers/staging/Kconfig drivers/staging/Makefile || true
+          sed -i '/rtl8188/Id' drivers/staging/Kconfig drivers/staging/Makefile || true
+          sed -i '/rtl8150/Id' drivers/staging/Kconfig drivers/staging/Makefile || true
+          sed -i '/rtl8187/Id' drivers/staging/Kconfig drivers/staging/Makefile || true
+          sed -i '/rtl88x2/Id' drivers/staging/Kconfig drivers/staging/Makefile || true
 
       - name: Inject RTL8812AU Driver
         run: |
