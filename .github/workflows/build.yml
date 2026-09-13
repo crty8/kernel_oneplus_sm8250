@@ -31,6 +31,9 @@ jobs:
           sed -i 's/-Wno-enum-int-mismatch//g' drivers/staging/rtl8821cu/Makefile
           sed -i 's/-Wno-stringop-overread//g' drivers/staging/rtl8821cu/Makefile
           
+          # Tell Clang to ignore sloppy C code parentheses warnings
+          echo 'EXTRA_CFLAGS += -Wno-error -Wno-parentheses-equality' >> drivers/staging/rtl8821cu/Makefile
+          
           echo 'source "drivers/staging/rtl8821cu/Kconfig"' >> drivers/staging/Kconfig
           echo 'obj-$(CONFIG_RTL8821CU) += rtl8821cu/' >> drivers/staging/Makefile
           echo "CONFIG_RTL8821CU=y" >> arch/arm64/configs/vendor/kona-perf_defconfig
