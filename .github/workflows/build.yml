@@ -20,6 +20,7 @@ jobs:
           sed -i '/rtl8150/Id' drivers/staging/Kconfig drivers/staging/Makefile || true
           sed -i '/rtl8187/Id' drivers/staging/Kconfig drivers/staging/Makefile || true
           sed -i '/rtl88x2/Id' drivers/staging/Kconfig drivers/staging/Makefile || true
+          sed -i '/rtl8812au/Id' drivers/staging/Kconfig drivers/staging/Makefile || true
 
       - name: Inject RTL8821CU Driver
         run: |
