@@ -59,10 +59,10 @@ jobs:
         run: |
           git clone --depth=1 https://github.com/osm0sis/AnyKernel3.git AK3
           
-          # Automating the manual AnyKernel3 fixes you did earlier!
+          # Automating the manual AnyKernel3 fixes with correct capitalization
           sed -i 's/do.devicecheck=1/do.devicecheck=0/g' AK3/anykernel.sh
-          sed -i 's/block=.*/BLOCK=boot;/g' AK3/anykernel.sh
-          sed -i 's/is_slot_device=0;/IS_SLOT_DEVICE=1;/g' AK3/anykernel.sh
+          sed -i 's/BLOCK=.*/BLOCK=boot;/g' AK3/anykernel.sh
+          sed -i 's/IS_SLOT_DEVICE=0/IS_SLOT_DEVICE=1/g' AK3/anykernel.sh
           sed -i '/# init.rc/,$d' AK3/anykernel.sh
           echo "dump_boot;" >> AK3/anykernel.sh
           echo "write_boot;" >> AK3/anykernel.sh
