@@ -26,6 +26,11 @@ jobs:
         run: |
           rm -rf drivers/staging/rtl8821cu
           git clone --depth=1 https://github.com/morrownr/8821cu-20210916.git drivers/staging/rtl8821cu
+          
+          # Fix Clang compiler errors by stripping out unsupported GCC flags
+          sed -i 's/-Wno-enum-int-mismatch//g' drivers/staging/rtl8821cu/Makefile
+          sed -i 's/-Wno-stringop-overread//g' drivers/staging/rtl8821cu/Makefile
+          
           echo 'source "drivers/staging/rtl8821cu/Kconfig"' >> drivers/staging/Kconfig
           echo 'obj-$(CONFIG_RTL8821CU) += rtl8821cu/' >> drivers/staging/Makefile
           echo "CONFIG_RTL8821CU=y" >> arch/arm64/configs/vendor/kona-perf_defconfig
