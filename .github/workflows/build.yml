@@ -15,17 +15,19 @@ jobs:
       - name: Remove Missing Kali Drivers
         run: |
           sed -i '/rtl8814/Id' drivers/staging/Kconfig drivers/staging/Makefile || true
-          sed -i '/rtl8821/Id' drivers/staging/Kconfig drivers/staging/Makefile || true
           sed -i '/rtl8192/Id' drivers/staging/Kconfig drivers/staging/Makefile || true
           sed -i '/rtl8188/Id' drivers/staging/Kconfig drivers/staging/Makefile || true
           sed -i '/rtl8150/Id' drivers/staging/Kconfig drivers/staging/Makefile || true
           sed -i '/rtl8187/Id' drivers/staging/Kconfig drivers/staging/Makefile || true
           sed -i '/rtl88x2/Id' drivers/staging/Kconfig drivers/staging/Makefile || true
 
-      - name: Inject RTL8812AU Driver
+      - name: Inject RTL8821CU Driver
         run: |
-          rm -rf drivers/staging/rtl8812au
-          git clone --depth=1 https://github.com/ViP3R-KERNELs/rtl8812au.git drivers/staging/rtl8812au
+          rm -rf drivers/staging/rtl8821cu
+          git clone --depth=1 https://github.com/kimocoder/rtl8821cu.git drivers/staging/rtl8821cu
+          echo 'source "drivers/staging/rtl8821cu/Kconfig"' >> drivers/staging/Kconfig
+          echo 'obj-$(CONFIG_RTL8821CU) += rtl8821cu/' >> drivers/staging/Makefile
+          echo "CONFIG_RTL8821CU=y" >> arch/arm64/configs/vendor/kona-perf_defconfig
 
       - name: Install Build Dependencies
         run: |
@@ -47,6 +49,15 @@ jobs:
       - name: Package with AnyKernel3
         run: |
           git clone --depth=1 https://github.com/osm0sis/AnyKernel3.git AK3
+          
+          # Automating the manual AnyKernel3 fixes you did earlier!
+          sed -i 's/do.devicecheck=1/do.devicecheck=0/g' AK3/anykernel.sh
+          sed -i 's/block=.*/BLOCK=boot;/g' AK3/anykernel.sh
+          sed -i 's/is_slot_device=0;/IS_SLOT_DEVICE=1;/g' AK3/anykernel.sh
+          sed -i '/# init.rc/,$d' AK3/anykernel.sh
+          echo "dump_boot;" >> AK3/anykernel.sh
+          echo "write_boot;" >> AK3/anykernel.sh
+          
           cp out/arch/arm64/boot/Image AK3/
           cd AK3
           zip -r9 ../AnyKernel3-ViP3R-kebab.zip * -x .git README.md
